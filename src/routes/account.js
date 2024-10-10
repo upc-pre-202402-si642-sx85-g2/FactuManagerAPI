@@ -6,7 +6,7 @@ const router = express.Router();
 
 const getAccountByEmail = require('../services/account');
 
-// Create user
+// Create account
 router.post('/create-account', async (req, res) => {
     try {
         const salt = await bcrypt.genSalt(10);
@@ -23,5 +23,15 @@ router.post('/create-account', async (req, res) => {
         res.json({message: error});
     }
 });
+
+// Get all accounts
+router.get('/accounts', async (req, res) => {
+    try {
+        const accounts = await accountSchema.find();
+        res.json(accounts);
+    } catch(error){
+        res.json({message: error});
+    }
+})
 
 module.exports = router;

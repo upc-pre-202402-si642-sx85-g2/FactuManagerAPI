@@ -1,17 +1,12 @@
 const mongoose = require('mongoose');
 
 const accountSchema = new mongoose.Schema({
-    id_cuenta: {
-        type: Number,
-        required: true,
-        unique: true,
-    },
     nombre_completo: {
         type: String,
         required: true,
     },
     dni: {
-        type: Number,
+        type: String,
         required: true,
     },
     email: {
