@@ -1,0 +1,25 @@
+version: '5.0'
+services:
+  mongo:
+    image: mongo:7.0
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: factumanagerDb2024
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodata:/data/db
+
+  api:
+    build: .
+    ports: 
+     - 9000:9000
+    environment:
+      MONGODB_URL: mongodb://root:factumanagerDb2024@mongo:27017/factuManagerDb?authSource=admin
+      NAME: FactuManagerAPI
+    depends_on:
+      - mongo
+
+volumes:
+  mongodata:
+    driver: local
