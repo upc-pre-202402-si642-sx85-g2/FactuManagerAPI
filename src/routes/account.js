@@ -1,6 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const accountSchema = require('../models/account');
+const carteraSchema = require('../models/cartera');
 
 const router = express.Router();
 
@@ -18,6 +19,9 @@ router.post('/create-account', async (req, res) => {
         });
         
         const newAccount = await account.save();
+
+        await carteraSchema.create({id_account: newAccount._id, cantidad_letras: 0});
+
         res.json(newAccount);
     } catch(error){
         res.json({message: error});

@@ -27,7 +27,7 @@ const facturaLetraSchema = new mongoose.Schema({
         required: true,
     },
     valor_nominal: {
-        type: Boolean,
+        type: Number,
         required: true,
     },
     createdAt: {
