@@ -6,6 +6,7 @@ require('dotenv').config();
 // Importing routes
 const accountRoutes = require('./routes/account');
 const letraRoutes = require('./routes/letra');
+const carteraRoutes = require('./routes/cartera')
 
 const app = express();
 const port = process.env.PORT || 9000;

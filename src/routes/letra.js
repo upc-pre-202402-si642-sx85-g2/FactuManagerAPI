@@ -2,6 +2,8 @@ const express = require('express');
 
 const letraSchema = require('../models/letra');
 
+const updateCantidadLetras = require('../services/cartera');
+
 const router = express.Router();
 
 // create letra
@@ -12,6 +14,7 @@ router.post('/create-letra', async (req, res) => {
         });
 
         const newLetra = await letra.save();
+        updateCantidadLetras(letra.carteraId,1);
         res.json(newLetra);
     } catch(error){
         res.json(error.message);
@@ -45,6 +48,7 @@ router.delete('/letra/:id', async(req, res) => {
         if (!letra) {
             return res.status(404).json({message: 'Letra not found'})
         }
+        updateCantidadLetras(letra.carteraId, -1);
         res.status(200).json({ message: 'Letra deleted succesfully'})    
     } catch(error){
         res.status(500).json(error.message);
