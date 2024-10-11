@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const facturaLetraSchema = new mongoose.Schema({
+const LetraSchema = new mongoose.Schema({
     carteraId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Wallet',
@@ -40,4 +40,4 @@ const facturaLetraSchema = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('FacturaLetra', facturaLetraSchema);
+module.exports = mongoose.model('Letra', LetraSchema);
