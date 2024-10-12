@@ -1,5 +1,6 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
+const jwt = require("jsonwebtoken");
 const accountSchema = require('../models/account');
 const carteraSchema = require('../models/cartera');
 
@@ -28,14 +29,30 @@ router.post('/create-account', async (req, res) => {
     }
 });
 
-// Get all accounts
-router.get('/accounts', async (req, res) => {
+// Sign-in
+router.post('/sign-in', async(req, res) => {
     try {
-        const accounts = await accountSchema.find();
-        res.json(accounts);
-    } catch(error){
-        res.json({message: error});
-    }
+        const { email, password } = req.body;
+    
+        const account = await getAccountByEmail(email);
+        if (!account) {
+          return res.status(404).send('Usuario no encontrado');
+        }
+  
+        const isMatch = await bcrypt.compare(password, account.clave_hash);
+        if (!isMatch) {
+          return res.status(401).send('Contraseña incorrecta');
+        }
+    
+        const token = jwt.sign({ id: account._id }, 'banbifBDTok$nPa$%', { expiresIn: '1h' });
+    
+        res.send({ token, userId: account._id });
+      } catch (error) {
+        console.error(error);
+        res.status(500).send('Error en el servidor');
+      }
 })
+
+
 
 module.exports = router;
