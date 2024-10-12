@@ -23,6 +23,7 @@ app.use(cors({
 
 app.use('/api/v1', accountRoutes);
 app.use('/api/v1', letraRoutes);
+app.use('/api/v1', carteraRoutes)
 
 // Routes
 app.get('/', (req, res) => {
