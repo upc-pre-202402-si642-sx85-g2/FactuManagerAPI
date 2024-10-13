@@ -17,6 +17,7 @@ router.post('/create-account', async (req, res) => {
         const account = new accountSchema({
             ...req.body,
             clave_hash: hashedPassword,
+            fecha_nacimiento: req.body.fecha_nacimiento // El formato debe ser YYYY-MM-DD
         });
         
         const newAccount = await account.save();
@@ -25,7 +26,10 @@ router.post('/create-account', async (req, res) => {
 
         res.json(newAccount);
     } catch(error){
-        res.json({message: error});
+      if (error.name == 'ValidationError') {
+        return res.status(400).json({message: error.message});
+      }
+      res.status(500).json({message: error.message});
     }
 });
 

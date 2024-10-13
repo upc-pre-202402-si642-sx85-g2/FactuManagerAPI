@@ -14,6 +14,7 @@ const carteraSchema = new mongoose.Schema({
     cantidad_letras: {
         type: Number,
         required: true,
+        min: 0
     }
 })
 
