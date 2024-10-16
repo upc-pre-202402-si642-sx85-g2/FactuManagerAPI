@@ -7,6 +7,7 @@ const carteraSchema = require('../models/cartera');
 const router = express.Router();
 
 const getAccountByEmail = require('../services/account');
+const transporter = require('../utils/mailer');
 
 // Create account
 router.post('/create-account', async (req, res) => {
@@ -57,6 +58,49 @@ router.post('/sign-in', async(req, res) => {
       }
 })
 
+// Request Password
+router.post('/recovery-password-reset', async(req, res) => {
+  const { email } = req.body;
+  try {
+    const account = await accountSchema.findOne( {email });
+    if(!account){
+      return res.status(404).json({message: 'Email not found.'});
+    }
+
+    // Generamos un token
+    const token = jwt.sign( {id: account._id }, 'secret_key', { expiresIn: '1h' });
+    
+    // Enviar el enlace de restablecimiento de contraseña por correo electrónico
+    const resetLink = `http://yourfrontend.com/reset-password?token=${token}`;
+    await transporter.sendMail({
+      from: 'gugultest123@gmail.com',
+      to: email,
+      subject: 'Reseteo de contraseña',
+      text: `Click al siguiente link para resetear la contraseña: ${resetLink}`
+    });
+    
+    res.json({ message: 'Password reset link sent to your email' });
+  } catch(error){
+    res.status(500).json({ message: error.message});
+  }
+})
+
+// Reset Password
+// Ruta para restablecer la contraseña
+router.post('/reset-password', async (req, res) => {
+  const { token, newPassword } = req.body;
+  try {
+      const decoded = jwt.verify(token, 'secret_key');
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+      await accountSchema.findByIdAndUpdate(decoded.id, { clave_hash: hashedPassword });
+
+      res.json({ message: 'Password has been reset' });
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+});
 
 
 module.exports = router;
