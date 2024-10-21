@@ -1,4 +1,11 @@
-FROM node:alpine
+FROM node:16
+
+# Instalar dependencias de compilación
+RUN apt-get update && apt-get install -y \
+    python \
+    make \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
 
 # Create app directory
 WORKDIR /urs/src/app

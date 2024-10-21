@@ -15,6 +15,12 @@ const carteraSchema = new mongoose.Schema({
         type: Number,
         required: true,
         min: 0
+    },
+    valor_nominal_total: {
+        type: Number,
+        required: true,
+        min: 0,
+        max: 600000
     }
 })
 

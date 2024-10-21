@@ -3,7 +3,7 @@ const express = require('express');
 const letraSchema = require('../models/letra');
 const authMiddleware = require('../middlewares/authMiddleware')
 
-const updateCantidadLetras = require('../services/cartera');
+const { updateCantidadLetras, updateValorNominalTotal } = require('../services/cartera');
 
 const router = express.Router();
 
@@ -18,7 +18,8 @@ router.post('/create-letra', authMiddleware, async (req, res) => {
         });
 
         const newLetra = await letra.save();
-        updateCantidadLetras(letra.carteraId,1);
+        await updateCantidadLetras(letra.carteraId,1);
+        await updateValorNominalTotal(letra.carteraId, letra.valor_nominal);
         res.json(newLetra);
     } catch(error){
         res.json(error.message);
@@ -52,7 +53,8 @@ router.delete('/letra/:id', authMiddleware, async(req, res) => {
         if (!letra) {
             return res.status(404).json({message: 'Letra not found'})
         }
-        updateCantidadLetras(letra.carteraId, -1);
+        await updateCantidadLetras(letra.carteraId, -1);
+        await updateValorNominalTotal(letra.carteraId, -letra.valor_nominal);
         res.status(200).json({ message: 'Letra deleted succesfully'})    
     } catch(error){
         res.status(500).json(error.message);

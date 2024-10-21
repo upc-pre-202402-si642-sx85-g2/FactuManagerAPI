@@ -23,7 +23,7 @@ router.post('/create-account', async (req, res) => {
         
         const newAccount = await account.save();
 
-        await carteraSchema.create({id_account: newAccount._id, cantidad_letras: 0});
+        await carteraSchema.create({id_account: newAccount._id, cantidad_letras: 0, valor_nominal_total: 0});
 
         res.json(newAccount);
     } catch(error){
