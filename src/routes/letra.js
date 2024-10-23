@@ -27,13 +27,13 @@ router.post('/create-letra', authMiddleware, async (req, res) => {
 })
 
 // get all letras by cartera ID
-router.get('/letras/:id', authMiddleware, async (req, res) => {
+    router.get('/letras/:id', authMiddleware, async (req, res) => {
     try {
         const letras = await letraSchema.find({ carteraId: req.params.id });
         res.json(letras);
     } catch(error) {
         res.json(error.message);
-    }    
+    }
 })
 
 // get letra by ID
@@ -55,7 +55,7 @@ router.delete('/letra/:id', authMiddleware, async(req, res) => {
         }
         await updateCantidadLetras(letra.carteraId, -1);
         await updateValorNominalTotal(letra.carteraId, -letra.valor_nominal);
-        res.status(200).json({ message: 'Letra deleted succesfully'})    
+        res.status(200).json({ message: 'Letra deleted succesfully'})
     } catch(error){
         res.status(500).json(error.message);
     }
