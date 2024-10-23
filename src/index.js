@@ -7,6 +7,10 @@ require('dotenv').config();
 const accountRoutes = require('./routes/account');
 const letraRoutes = require('./routes/letra');
 const carteraRoutes = require('./routes/cartera')
+const operationRoutes = require('./routes/operation');
+
+
+
 
 const app = express();
 const port = process.env.PORT || 9000;
@@ -24,6 +28,8 @@ app.use(cors({
 app.use('/api/v1', accountRoutes);
 app.use('/api/v1', letraRoutes);
 app.use('/api/v1', carteraRoutes)
+app.use('/api/v1', operationRoutes);
+
 
 // Routes
 app.get('/', (req, res) => {
