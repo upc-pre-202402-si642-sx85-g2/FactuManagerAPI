@@ -6,8 +6,8 @@ const calculatePeriodoDias = (fecha_vencimiento, fecha_descuento) => {
 const calculateTEAForPeriod = (tasaEfectivaAnual, periodo_dias) => {
     return Math.pow((1 + tasaEfectivaAnual), (periodo_dias / 360)) - 1;
 };
-const calculateTasaDescontada = (TeaForPeriod) => {
-    return TeaForPeriod / (1 + TeaForPeriod);
+const calculateTasaDescontada = (tea_for_period) => {
+    return tea_for_period / (1 + tea_for_period);
 };
 
 const calculateValorRecibido = (valor_nominal, tasa_descontada, desgravamen) => {

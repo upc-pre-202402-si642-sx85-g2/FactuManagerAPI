@@ -12,7 +12,7 @@ const OperationSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    tasaEfectivaAnual: {
+    tasa_efectiva_anual: {
         type: Number,
         required: true,
     },
@@ -28,11 +28,11 @@ const OperationSchema = new mongoose.Schema({
         type: Number,
         required: false,
     },
-    TCEA: {
+    tcea: {
         type: Number,
         required: false,
     },
-    TeaForPeriod: {
+    tea_for_period: {
         type: Number,
         required: false,
     },
@@ -59,7 +59,7 @@ OperationSchema.pre('save', async function(next) {
     }
 
     const periodoDias = calculatePeriodoDias(letra.fecha_vencimiento, letra.fecha_descuento);
-    const teaForPeriod = calculateTEAForPeriod(this.tasaEfectivaAnual, periodoDias);
+    const teaForPeriod = calculateTEAForPeriod(this.tasa_efectiva_anual, periodoDias);
     const tasaDescontada = calculateTasaDescontada(teaForPeriod);
     const valorEntregado = calculateValorEntregado(letra.valor_nominal);
     const valorRecibido = calculateValorRecibido(letra.valor_nominal, tasaDescontada, this.desgravamen);
@@ -67,11 +67,11 @@ OperationSchema.pre('save', async function(next) {
 
     //se actuliza los vaores calculados
     this.periodo_dias = periodoDias;
-    this.TeaForPeriod = teaForPeriod;
+    this.tea_for_period = teaForPeriod;
     this.valor_entregado = valorEntregado;
     this.valor_recibido = valorRecibido;
     this.tasa_descontada = tasaDescontada;
-    this.TCEA = tcea;
+    this.tcea = tcea;
 
     next();
 });

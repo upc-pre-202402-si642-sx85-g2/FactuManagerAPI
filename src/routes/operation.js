@@ -9,20 +9,21 @@ const router = express.Router();
 /*Post create operation  =>http://localhost:9000/api/v1/create-operation
 
 formato json ejmeplo
+
 {
-    "letraId": "6718bd93610154c7efbecea3",    -> pone el id de una cartera existente
-    "banco": "Banco Tren Aragua",
-    "tasaEfectivaAnual": 0.25,
-    "desgravamen": 0.01
+    "letraId": "6718cdde31721fc8164cdc0c",  =>pone el id de una letra existente
+    "banco": "Banco BBVA",
+    "tasa_efectiva_anual": 0.30,
+    "desgravamen": 0.003
 }
 
 */
 
 router.post('/create-operation', authMiddleware, async (req, res) => {
     try {
-        const { letraId, banco, tasaEfectivaAnual, desgravamen } = req.body;
+        const { letraId, banco, tasa_efectiva_anual, desgravamen } = req.body;
 
-        if (!letraId || !banco || !tasaEfectivaAnual || !desgravamen) {
+        if (!letraId || !banco || !tasa_efectiva_anual || !desgravamen) {
             return res.status(400).json({ message: 'Todos los campos son obligatorios' });
         }
 
@@ -34,7 +35,7 @@ router.post('/create-operation', authMiddleware, async (req, res) => {
         const nuevaOperacion = new operationSchema({
             letraId,
             banco,
-            tasaEfectivaAnual,
+            tasa_efectiva_anual,
             desgravamen
         });
 
