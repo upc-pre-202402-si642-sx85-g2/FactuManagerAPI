@@ -5,7 +5,6 @@ const carteraSchema = require('../models/cartera');
 
 const router = express.Router();
 
-// Get cartera by User ID
 router.get('/cartera/:id', authMiddleware, async(req, res) => {
     try{
         const cartera = await carteraSchema.find({id_account: req.params.id});

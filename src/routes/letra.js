@@ -1,13 +1,10 @@
 const express = require('express');
-
+const router = express.Router();
+const authMiddleware = require('../middlewares/authMiddleware');
 const letraSchema = require('../models/letra');
-const authMiddleware = require('../middlewares/authMiddleware')
 
 const { updateCantidadLetras, updateValorNominalTotal } = require('../services/cartera');
 
-const router = express.Router();
-
-// create letra
 router.post('/create-letra', authMiddleware, async (req, res) => {
     try {
         const letra = new letraSchema({
@@ -18,48 +15,44 @@ router.post('/create-letra', authMiddleware, async (req, res) => {
         });
 
         const newLetra = await letra.save();
-        await updateCantidadLetras(letra.carteraId,1);
+        await updateCantidadLetras(letra.carteraId, 1);
         await updateValorNominalTotal(letra.carteraId, letra.valor_nominal);
         res.json(newLetra);
-    } catch(error){
+    } catch (error) {
         res.json(error.message);
     }
-})
+});
 
-// get all letras by cartera ID
-    router.get('/letras/:id', authMiddleware, async (req, res) => {
+router.get('/letras/:id', authMiddleware, async (req, res) => {
     try {
         const letras = await letraSchema.find({ carteraId: req.params.id });
         res.json(letras);
-    } catch(error) {
+    } catch (error) {
         res.json(error.message);
     }
-})
+});
 
-// get letra by ID
 router.get('/letra/:id', authMiddleware, async (req, res) => {
     try {
-        const letra = await letraSchema.find({ _id: req.params.id});
+        const letra = await letraSchema.find({ _id: req.params.id });
         res.json(letra);
-    } catch(error){
+    } catch (error) {
         res.json(error.message);
     }
-})
+});
 
-// delete Letra by ID
-router.delete('/letra/:id', authMiddleware, async(req, res) => {
+router.delete('/letra/:id', authMiddleware, async (req, res) => {
     try {
         const letra = await letraSchema.findByIdAndDelete(req.params.id);
         if (!letra) {
-            return res.status(404).json({message: 'Letra not found'})
+            return res.status(404).json({ message: 'Letra not found' });
         }
         await updateCantidadLetras(letra.carteraId, -1);
         await updateValorNominalTotal(letra.carteraId, -letra.valor_nominal);
-        res.status(200).json({ message: 'Letra deleted succesfully'})
-    } catch(error){
+        res.status(200).json({ message: 'Letra deleted successfully' });
+    } catch (error) {
         res.status(500).json(error.message);
     }
-})
-
+});
 
 module.exports = router;

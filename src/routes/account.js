@@ -9,7 +9,6 @@ const router = express.Router();
 const getAccountByEmail = require('../services/account');
 const transporter = require('../utils/mailer');
 
-// Create account
 router.post('/create-account', async (req, res) => {
     try {
         const salt = await bcrypt.genSalt(10);
@@ -34,7 +33,6 @@ router.post('/create-account', async (req, res) => {
     }
 });
 
-// Sign-in
 router.post('/sign-in', async(req, res) => {
     try {
         const { email, password } = req.body;
@@ -58,7 +56,6 @@ router.post('/sign-in', async(req, res) => {
       }
 })
 
-// Request Password
 router.post('/recovery-password-reset', async(req, res) => {
   const { email } = req.body;
   try {
@@ -85,8 +82,6 @@ router.post('/recovery-password-reset', async(req, res) => {
   }
 })
 
-// Reset Password
-// Ruta para restablecer la contraseña
 router.post('/reset-password', async (req, res) => {
   const { token, newPassword } = req.body;
   try {

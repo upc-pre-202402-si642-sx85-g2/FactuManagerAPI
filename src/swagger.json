@@ -1,0 +1,414 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "API Documentation",
+      "version": "1.0.0",
+      "description": "API Documentation"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:9000",
+        "description": "Local server"
+      }
+    ],
+    "tags": [
+      {
+        "name": "User",
+        "description": "Endpoints related to user operations"
+      },
+      {
+        "name": "Cartera",
+        "description": "Endpoints related to cartera operations"
+      },
+      {
+        "name": "Letras",
+        "description": "Endpoints related to letras operations"
+      }
+    ],
+    "paths": {
+      "/api/v1/create-account": {
+        "post": {
+          "tags": ["User"],
+          "summary": "Create a new account",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "nombre_completo": {
+                      "type": "string"
+                    },
+                    "dni": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string"
+                    },
+                    "fecha_nacimiento": {
+                      "type": "string",
+                      "format": "date"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Account created successfully"
+            },
+            "400": {
+              "description": "Validation error"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/api/v1/sign-in": {
+        "post": {
+          "tags": ["User"],
+          "summary": "Sign in to an account",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Sign in successful"
+            },
+            "401": {
+              "description": "Incorrect password"
+            },
+            "404": {
+              "description": "User not found"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/api/v1/recovery-password-reset": {
+        "post": {
+          "tags": ["User"],
+          "summary": "Request password reset",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Password reset link sent to your email"
+            },
+            "404": {
+              "description": "Email not found"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/api/v1/reset-password": {
+        "post": {
+          "tags": ["User"],
+          "summary": "Reset password",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    },
+                    "newPassword": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Password has been reset"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/api/v1/cartera/{id}": {
+        "get": {
+          "tags": ["Cartera"],
+          "summary": "Get cartera by User ID",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "User ID"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id_account": {
+                          "type": "string"
+                        },
+                        "cantidad_letras": {
+                          "type": "number"
+                        },
+                        "valor_nominal_total": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Cartera not found"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/api/v1/create-letra": {
+        "post": {
+          "tags": ["Letras"],
+          "summary": "Create a new letra",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "carteraId": {
+                      "type": "string"
+                    },
+                    "fecha_emision": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "fecha_descuento": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "fecha_vencimiento": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "valor_nominal": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Letra created successfully"
+            },
+            "400": {
+              "description": "Validation error"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/api/v1/letras/{id}": {
+        "get": {
+          "tags": ["Letras"],
+          "summary": "Get all letras by cartera ID",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Cartera ID"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "carteraId": {
+                          "type": "string"
+                        },
+                        "fecha_emision": {
+                          "type": "string",
+                          "format": "date"
+                        },
+                        "fecha_descuento": {
+                          "type": "string",
+                          "format": "date"
+                        },
+                        "fecha_vencimiento": {
+                          "type": "string",
+                          "format": "date"
+                        },
+                        "valor_nominal": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Letras not found"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/api/v1/letra/{id}": {
+        "get": {
+          "tags": ["Letras"],
+          "summary": "Get letra by ID",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Letra ID"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "carteraId": {
+                        "type": "string"
+                      },
+                      "fecha_emision": {
+                        "type": "string",
+                        "format": "date"
+                      },
+                      "fecha_descuento": {
+                        "type": "string",
+                        "format": "date"
+                      },
+                      "fecha_vencimiento": {
+                        "type": "string",
+                        "format": "date"
+                      },
+                      "valor_nominal": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Letra not found"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/api/v1/letra/{id}": {
+        "delete": {
+          "tags": ["Letras"],
+          "summary": "Delete letra by ID",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Letra ID"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Letra deleted successfully"
+            },
+            "404": {
+              "description": "Letra not found"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      }
+    }
+  }
