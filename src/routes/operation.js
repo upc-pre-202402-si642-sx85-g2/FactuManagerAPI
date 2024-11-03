@@ -11,10 +11,14 @@ const router = express.Router();
 formato json ejmeplo
 
 {
-    "letraId": "6718cdde31721fc8164cdc0c",  =>pone el id de una letra existente
+    "letraIds": [
+        "6718cdde31721fc8164cdc0c",  // id de la letra que exiwsta en la bd
+        "67270690e1e023a443e8ac3f",
+        "6727070de1e023a443e8ac45"
+    ],
     "banco": "Banco BBVA",
-    "tasa_efectiva_anual": 0.30,
-    "desgravamen": 0.003
+    "tasa_efectiva_anual": 0.50,
+    "desgravamen": 0.008
 }
 
 */
@@ -52,16 +56,23 @@ router.post('/create-operation', authMiddleware, async (req, res) => {
     }
 });
 
-// Get  para traer todas las operaciones de una letra
-router.get('/operations/:letraId', authMiddleware, async (req, res) => {
+// Get para traer todas las operaciones
+router.get('/all-operations', authMiddleware, async (req, res) => {
     try {
-        const operations = await operationSchema.find({ letraId: req.params.letraId });
-        res.json(operations);
+        // Buscar todas las operaciones en la base de datos
+        const operations = await operationSchema.find();
+
+        // Extraer el array `operaciones` de cada operación
+        const allOperaciones = operations.map(operation => operation.operaciones).flat();
+
+        // Retornar el array `operaciones` en la respuesta
+        res.json(allOperaciones);
     } catch (error) {
         console.error('Error al obtener las operaciones:', error);
         res.status(500).json({ message: 'Error al obtener las operaciones' });
     }
 });
+
 
 // Get para traer una operacion por id
 router.get('/operation/:operationId', authMiddleware, async (req, res) => {

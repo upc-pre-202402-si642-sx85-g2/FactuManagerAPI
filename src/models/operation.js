@@ -52,6 +52,14 @@ const OperationSchema = new mongoose.Schema({
         periodo_dias: Number,
         tasa_descontada: Number,
     }],
+    total_valor_entregado: {
+        type: Number,
+        required: false
+    },
+    total_valor_recibido: {
+        type: Number,
+        required: false
+    },
     created_at: {
         type: Date,
         default: Date.now
@@ -85,9 +93,12 @@ OperationSchema.pre('save', async function(next) {
             tea_for_period: teaForPeriod,
             periodo_dias: periodoDias,
             tasa_descontada: tasaDescontada,
+
         });
     }
-
+    //calula ña suma total de valore recibidos y entregados de todas las letras
+    this.total_valor_entregado = this.operaciones.reduce((sum, op) => sum + op.valor_entregado, 0);
+    this.total_valor_recibido = this.operaciones.reduce((sum, op) => sum + op.valor_recibido, 0);
     next();
 });
 
