@@ -49,7 +49,7 @@ router.post('/sign-in', async(req, res) => {
     
         const token = jwt.sign({ id: account._id }, 'banbifBDTok$nPa$%', { expiresIn: '1h' });
     
-        res.send({ token, userId: account._id });
+        res.send({ token, userId: account._id, userName: account.nombre_completo });
       } catch (error) {
         console.error(error);
         res.status(500).send('Error en el servidor');
