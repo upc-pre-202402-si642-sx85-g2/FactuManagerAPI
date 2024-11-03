@@ -21,19 +21,23 @@ formato json ejmeplo
 
 router.post('/create-operation', authMiddleware, async (req, res) => {
     try {
-        const { letraId, banco, tasa_efectiva_anual, desgravamen } = req.body;
+        const { letraIds, banco, tasa_efectiva_anual, desgravamen } = req.body;
 
-        if (!letraId || !banco || !tasa_efectiva_anual || !desgravamen) {
+        if (!letraIds || letraIds.length === 0 || !banco || !tasa_efectiva_anual || !desgravamen) {
             return res.status(400).json({ message: 'Todos los campos son obligatorios' });
         }
 
-        const letra = await model('Letra').findById(letraId);
-        if (!letra) {
-            return res.status(404).json({ message: 'Letra no encontrada' });
+        // Verificar que todas las letras existan
+        for (const id of letraIds) {
+            const letra = await model('Letra').findById(id);
+            if (!letra) {
+                return res.status(404).json({ message: `Letra con ID ${id} no encontrada` });
+            }
         }
 
+        // Crear la operación con múltiples letras
         const nuevaOperacion = new operationSchema({
-            letraId,
+            letraIds,
             banco,
             tasa_efectiva_anual,
             desgravamen

@@ -8,7 +8,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/models/operation.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/operation.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/routes/operation.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/operation.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/calculations.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/calculations.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/swagger.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/swagger.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,8 +32,9 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Node.js.index.js.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "feature/operations",
+    "git-widget-placeholder": "develop",
     "last_opened_file_path": "C:/Users/josep/Downloads/Finanzas-GRUPO1-TF-master/Finanzas-GRUPO1-TF-master",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",

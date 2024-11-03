@@ -3,11 +3,11 @@ const { calculatePeriodoDias, calculateValorEntregado, calculateValorRecibido, c
 
 
 const OperationSchema = new mongoose.Schema({
-    letraId: {
+    letraIds: [{  //array lista de letras
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Letra',
         required: true,
-    },
+    }],
     banco: {
         type: String,
         required: true,
@@ -44,34 +44,49 @@ const OperationSchema = new mongoose.Schema({
         type: Number,
         required: false,
     },
+    operaciones: [{ // Array para almacenar los resultados de cada "letra"
+        valor_entregado: Number,
+        valor_recibido: Number,
+        tcea: Number,
+        tea_for_period: Number,
+        periodo_dias: Number,
+        tasa_descontada: Number,
+    }],
     created_at: {
         type: Date,
         default: Date.now
     },
 });
 
-// busca  datos necesairos a partir de la letra para calcular los valores de la operacion
+// Middleware `pre('save')` para calcular cada letra en `letraIds`
 OperationSchema.pre('save', async function(next) {
-    const letra = await mongoose.model('Letra').findById(this.letraId);
+    // Array para almacenar operaciones de cada letra
+    this.operaciones = [];
+// busca  datos necesairos a partir de la letra para calcular los valores de la operacion
+    for (const letraId of this.letraIds) {
+        const letra = await mongoose.model('Letra').findById(letraId);
 
-    if (!letra) {
-        throw new Error('Letra no encontrada');
+        if (!letra) {
+            throw new Error(`Letra con ID ${letraId} no encontrada`);
+        }
+
+        const periodoDias = calculatePeriodoDias(letra.fecha_vencimiento, letra.fecha_descuento);
+        const teaForPeriod = calculateTEAForPeriod(this.tasa_efectiva_anual, periodoDias);
+        const tasaDescontada = calculateTasaDescontada(teaForPeriod);
+        const valorEntregado = calculateValorEntregado(letra.valor_nominal);
+        const valorRecibido = calculateValorRecibido(letra.valor_nominal, tasaDescontada, this.desgravamen);
+        const tcea = calculateTCEA(valorEntregado, valorRecibido, periodoDias);
+
+        // Agregar resultados al array de operaciones
+        this.operaciones.push({
+            valor_entregado: valorEntregado,
+            valor_recibido: valorRecibido,
+            tcea,
+            tea_for_period: teaForPeriod,
+            periodo_dias: periodoDias,
+            tasa_descontada: tasaDescontada,
+        });
     }
-
-    const periodoDias = calculatePeriodoDias(letra.fecha_vencimiento, letra.fecha_descuento);
-    const teaForPeriod = calculateTEAForPeriod(this.tasa_efectiva_anual, periodoDias);
-    const tasaDescontada = calculateTasaDescontada(teaForPeriod);
-    const valorEntregado = calculateValorEntregado(letra.valor_nominal);
-    const valorRecibido = calculateValorRecibido(letra.valor_nominal, tasaDescontada, this.desgravamen);
-    const tcea = calculateTCEA(valorEntregado, valorRecibido, periodoDias);
-
-    //se actuliza los vaores calculados
-    this.periodo_dias = periodoDias;
-    this.tea_for_period = teaForPeriod;
-    this.valor_entregado = valorEntregado;
-    this.valor_recibido = valorRecibido;
-    this.tasa_descontada = tasaDescontada;
-    this.tcea = tcea;
 
     next();
 });
