@@ -68,7 +68,7 @@ router.post('/recovery-password-reset', async(req, res) => {
     const token = jwt.sign( {id: account._id }, 'secret_key', { expiresIn: '1h' });
     
     // Enviar el enlace de restablecimiento de contraseña por correo electrónico
-    const resetLink = `http://yourfrontend.com/reset-password?token=${token}`;
+    const resetLink = `http://localhost:5173/recovery-password?token=${token}`;
     await transporter.sendMail({
       from: 'gugultest123@gmail.com',
       to: email,
