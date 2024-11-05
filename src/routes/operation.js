@@ -63,8 +63,21 @@ router.get('/all-operations', authMiddleware, async (req, res) => {
         const operations = await operationSchema.find();
 
         // Extraer el array `operaciones` de cada operación
-        const allOperaciones = operations.map(operation => operation.operaciones).flat();
-
+        //const allOperaciones = operations.map(operation => operation.operaciones).flat();
+        // Transform the data to match the front-end structure
+        const allOperaciones = operations.map(operation => {
+            return operation.operaciones.map(op => ({
+                bank: operation.banco,
+                nominalValue: operation.valor_entregado,
+                tea: operation.tasa_efectiva_anual,
+                tcea: op.tcea,
+                periodInDays: op.periodo_dias,
+                tep: op.tea_for_period,
+                discountedRate: op.tasa_descontada,
+                deliveredValue: op.valor_entregado,
+                receivedValue: op.valor_recibido
+            }));
+        }).flat();
         // Retornar el array `operaciones` en la respuesta
         res.json(allOperaciones);
     } catch (error) {
