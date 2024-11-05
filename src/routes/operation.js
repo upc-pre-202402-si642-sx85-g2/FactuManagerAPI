@@ -1,10 +1,9 @@
 const express = require('express');
 const authMiddleware = require('../middlewares/authMiddleware');
 const operationSchema = require('../models/operation');
-const {model} = require("mongoose");
+const { model } = require("mongoose");
 
 const router = express.Router();
-
 
 /*Post create operation  =>http://localhost:9000/api/v1/create-operation
 
@@ -62,13 +61,11 @@ router.get('/all-operations', authMiddleware, async (req, res) => {
         // Buscar todas las operaciones en la base de datos
         const operations = await operationSchema.find();
 
-        // Extraer el array `operaciones` de cada operación
-        //const allOperaciones = operations.map(operation => operation.operaciones).flat();
         // Transform the data to match the front-end structure
         const allOperaciones = operations.map(operation => {
             return operation.operaciones.map(op => ({
                 bank: operation.banco,
-                nominalValue: operation.valor_entregado,
+                nominalValue: op.valor_nominal,
                 tea: operation.tasa_efectiva_anual,
                 tcea: op.tcea,
                 periodInDays: op.periodo_dias,
@@ -86,7 +83,6 @@ router.get('/all-operations', authMiddleware, async (req, res) => {
     }
 });
 
-
 // Get para traer una operacion por id
 router.get('/operation/:operationId', authMiddleware, async (req, res) => {
     try {
@@ -100,7 +96,5 @@ router.get('/operation/:operationId', authMiddleware, async (req, res) => {
         res.status(500).json({ message: 'Error al obtener la operación' });
     }
 });
-
-
 
 module.exports = router;

@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const { calculatePeriodoDias, calculateValorEntregado, calculateValorRecibido, calculateTEAForPeriod, calculateTasaDescontada, calculateTCEA } = require('../utils/calculations');
 
-
 const OperationSchema = new mongoose.Schema({
     letraIds: [{  //array lista de letras
         type: mongoose.Schema.Types.ObjectId,
@@ -45,6 +44,7 @@ const OperationSchema = new mongoose.Schema({
         required: false,
     },
     operaciones: [{ // Array para almacenar los resultados de cada "letra"
+        valor_nominal: Number,
         valor_entregado: Number,
         valor_recibido: Number,
         tcea: Number,
@@ -70,7 +70,7 @@ const OperationSchema = new mongoose.Schema({
 OperationSchema.pre('save', async function(next) {
     // Array para almacenar operaciones de cada letra
     this.operaciones = [];
-// busca  datos necesairos a partir de la letra para calcular los valores de la operacion
+    // busca  datos necesairos a partir de la letra para calcular los valores de la operacion
     for (const letraId of this.letraIds) {
         const letra = await mongoose.model('Letra').findById(letraId);
 
@@ -87,13 +87,13 @@ OperationSchema.pre('save', async function(next) {
 
         // Agregar resultados al array de operaciones
         this.operaciones.push({
+            valor_nominal: letra.valor_nominal,
             valor_entregado: valorEntregado,
             valor_recibido: valorRecibido,
             tcea,
             tea_for_period: teaForPeriod,
             periodo_dias: periodoDias,
             tasa_descontada: tasaDescontada,
-
         });
     }
     //calula ña suma total de valore recibidos y entregados de todas las letras
