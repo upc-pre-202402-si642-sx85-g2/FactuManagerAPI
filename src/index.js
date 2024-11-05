@@ -19,7 +19,7 @@ app.use(express.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(cors({
-  origin: 'http://localhost:4200'
+  origin: 'http://localhost:5173'
 }));
 
 app.use('/api/v1', accountRoutes);
