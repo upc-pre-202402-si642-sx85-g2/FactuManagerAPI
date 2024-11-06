@@ -49,6 +49,12 @@ const LetraSchema = new mongoose.Schema({
                     return this.fecha_emision && (v - this.fecha_emision) <= 365 * 24 * 60 * 60 * 1000; // 1 año en milisegundos
                 },
                 message: props => `Expiration date (${props.value}) must be within one year of the issue date.`
+            },
+            {
+                validator: function(v) {
+                    return this.fecha_descuento && (v - this.fecha_descuento) >= 90 * 24 * 60 * 60 * 1000; // 90 días en milisegundos
+                },
+                message: props => `Expiration date (${props.value}) must be at least 90 days after the discount date.`
             }
         ]
     },
