@@ -17,9 +17,12 @@ router.post('/create-letra', authMiddleware, async (req, res) => {
         const newLetra = await letra.save();
         await updateCantidadLetras(letra.carteraId, 1);
         await updateValorNominalTotal(letra.carteraId, letra.valor_nominal);
+
         res.json(newLetra);
     } catch (error) {
+        
         res.json(error.message);
+        console.log(newLetra);
     }
 });
 

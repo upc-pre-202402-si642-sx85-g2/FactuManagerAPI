@@ -46,7 +46,7 @@ const LetraSchema = new mongoose.Schema({
             },
             {
                 validator: function(v) {
-                    return this.fecha_emision && (v - this.fecha_emision) <= 365 * 24 * 60 * 60 * 1000; // 1 año en milisegundos
+                    return this.fecha_emision && (v - this.fecha_emision) >= 90 * 24 * 60 * 60 * 1000; // 3 meses en milisegundos
                 },
                 message: props => `Expiration date (${props.value}) must be within one year of the issue date.`
             },
